@@ -4,8 +4,8 @@ const pool = require("../config/db");
 // Get all products
 const getProducts = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM products");
-    res.json(result.rows);
+    const [rows] = await pool.query("SELECT * FROM products");
+    res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -15,11 +15,11 @@ const getProducts = async (req, res) => {
 const addProduct = async (req, res) => {
   const { artisan_id, category, material, color, size, price } = req.body;
   try {
-    const result = await pool.query(
-      "INSERT INTO products (artisan_id, category, material, color, size, price) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *",
+    const [result] = await pool.query(
+      "INSERT INTO products (artisan_id, category, material, color, size, price) VALUES (?, ?, ?, ?, ?, ?)",
       [artisan_id, category, material, color, size, price]
     );
-    res.json(result.rows[0]);
+    res.json({ id: result.insertId, artisan_id, category, material, color, size, price });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
