@@ -3,15 +3,18 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+const app = express();   // ✅ create app first
+
+// Middleware
+app.use(cors());
+app.use(express.json()); // ✅ then enable JSON parsing
+app.use(express.urlencoded({ extended: true })); // Add this to handle form data (e.g., from Postman "form-data" or "x-www-form-urlencoded")
+
+// Routes
 const productRoutes = require("./routes/products");
 const artisanRoutes = require("./routes/artisans");
 // const orderRoutes = require("./routes/orders");
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// Routes
 app.use("/api/products", productRoutes);
 app.use("/api/artisans", artisanRoutes);
 // app.use("/api/orders", orderRoutes);
