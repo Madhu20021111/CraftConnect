@@ -1,13 +1,23 @@
+import type { Metadata } from "next";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "./globals.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const metadata: Metadata = {
+  title: "CraftConnect | Handmade Marketplace",
+  description: "Connecting local global artisans with craft lovers.",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className="bg-amber-50 text-gray-900">
+      <body className="flex flex-col min-height-screen">
         <Navbar />
-        {children}
+        <main className="flex-grow">{children}</main>
         <Footer />
       </body>
     </html>
