@@ -1,49 +1,69 @@
 interface ProductCardProps {
-  emoji: string;
+  emoji?: string;
+  imageUrl?: string;
   badge?: string;
   name: string;
-  description: string;
+  description?: string;
   price: string;
-  artisanInitials: string;
+  artisanInitials?: string;
+  artisanAvatar?: string;
   artisanName: string;
-  bgColor: string;
+  bgColor?: string;
 }
 
 export default function ProductCard({
   emoji,
+  imageUrl,
   badge,
   name,
-  description,
   price,
   artisanInitials,
+  artisanAvatar,
   artisanName,
   bgColor
 }: ProductCardProps) {
+  // Use a fallback random unsplash image if neither imageUrl nor emoji is good enough
+  const displayImage = imageUrl || `https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop`;
+
   return (
-    <div className="bg-white rounded-xl border border-[#e8d5c0] overflow-hidden flex flex-col justify-between cursor-pointer hover:shadow-sm transition-all duration-150">
-      <div>
-        <div className={`h-40 flex items-center justify-center text-5xl relative ${bgColor}`}>
-          {emoji}
-          {badge && (
-            <span className="absolute top-3 left-3 bg-[#C08552] text-white text-[10px] uppercase tracking-wider font-semibold px-2.5 py-0.5 rounded-md">
-              {badge}
-            </span>
-          )}
-        </div>
-        <div className="p-4 pb-2">
-          <h3 className="text-base font-semibold text-[#4B2E2B] mb-1 line-clamp-1">{name}</h3>
-          <p className="text-xs text-[#8C5A3C] line-clamp-2 leading-relaxed mb-3">{description}</p>
-        </div>
-      </div>
-      
-      <div className="p-4 pt-0 flex items-center justify-between mt-auto">
-        <span className="text-base font-bold text-[#8C5A3C]">{price}</span>
-        <div className="flex items-center gap-1.5 bg-[#FFF8F0] py-1 px-2 rounded-full border border-[#e8d5c0]/40 max-w-[120px]">
-          <div className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white bg-[#8C5A3C] shrink-0">
-            {artisanInitials}
+    <div className="group cursor-pointer">
+      {/* Image Container */}
+      <div className="relative aspect-square mb-4 overflow-hidden bg-[#F5F5F5]">
+        {imageUrl ? (
+          <img 
+            src={imageUrl} 
+            alt={name} 
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className={`w-full h-full flex items-center justify-center text-6xl ${bgColor || 'bg-craft-bgAlt'} transition-transform duration-500 group-hover:scale-105`}>
+            {emoji || '🏺'}
           </div>
-          <span className="text-[11px] font-medium text-[#8C5A3C] truncate">{artisanName}</span>
+        )}
+        
+        {badge && (
+          <div className="absolute top-3 left-3 bg-white px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-craft-dark shadow-sm">
+            {badge}
+          </div>
+        )}
+      </div>
+
+      {/* Details */}
+      <div>
+        <h3 className="font-serif text-[17px] font-bold text-craft-dark mb-1.5">{name}</h3>
+        
+        <div className="flex items-center gap-2 mb-2">
+          {artisanAvatar ? (
+            <img src={artisanAvatar} className="w-5 h-5 rounded-full object-cover" alt={artisanName} />
+          ) : (
+            <div className="w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold text-white bg-craft-dark">
+              {artisanInitials || artisanName.charAt(0)}
+            </div>
+          )}
+          <span className="text-[11px] text-craft-brown">{artisanName}</span>
         </div>
+
+        <div className="text-[13px] text-craft-accent">{price}</div>
       </div>
     </div>
   );

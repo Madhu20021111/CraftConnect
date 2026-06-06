@@ -34,7 +34,7 @@ export default function JoinAsArtisan() {
 
     try {
       // Maps all parameters directly to match your backend transaction payload
-      await api.post("/artisans", {
+      const response = await api.post("/artisans", {
         name: formData.name,
         craft_type: formData.craft_type,
         village: formData.village,
@@ -45,7 +45,7 @@ export default function JoinAsArtisan() {
 
       setSuccess(true);
       setTimeout(() => {
-        router.push("/artisans");
+        router.push(`/artisans/${response.data.id}/dashboard`);
       }, 2000);
     } catch (err: any) {
       console.error("Registration failed:", err);
@@ -71,25 +71,25 @@ export default function JoinAsArtisan() {
 
   return (
     <div className="min-h-screen py-12 px-6 max-w-xl mx-auto">
-      <div className="bg-white rounded-2xl border border-craft-lightTan p-6 md:p-8 shadow-sm">
-        <div className="text-center mb-8">
-          <span className="text-2xl">⚒️</span>
-          <h1 className="text-2xl font-bold text-craft-dark mt-2 tracking-tight">Join as an Artisan</h1>
-          <p className="text-xs text-craft-brown mt-1 leading-relaxed">
+      <div className="bg-white rounded-3xl border border-[#e8d5c0] p-8 md:p-10 shadow-md">
+        <div className="text-center mb-10">
+          <span className="text-3xl mb-3 block">⚒️</span>
+          <h1 className="text-2xl md:text-3xl font-bold text-[#4B2E2B] tracking-tight">Join as an Artisan</h1>
+          <p className="text-sm text-[#8C5A3C] mt-2 leading-relaxed font-medium">
             Register your profile to showcase your traditional skills and receive inquiries from craft lovers worldwide.
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg font-medium">
+          <div className="mb-8 p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl font-medium">
             ⚠️ {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* name */}
           <div>
-            <label htmlFor="name" className="block text-xs font-semibold text-craft-dark uppercase tracking-wider mb-1.5">
+            <label htmlFor="name" className="block text-[11px] font-bold text-[#8C5A3C] uppercase tracking-widest mb-2">
               Full Name
             </label>
             <input
@@ -101,13 +101,13 @@ export default function JoinAsArtisan() {
               value={formData.name}
               onChange={handleChange}
               placeholder="e.g., Rania Al-Farsi"
-              className="w-full text-sm px-3.5 py-2.5 rounded-lg border border-craft-lightTan bg-white text-craft-dark placeholder-gray-400 focus:outline-none focus:border-craft-tan transition-colors"
+              className="w-full text-sm px-4 py-3 rounded-xl border border-[#e8d5c0] bg-white text-[#4B2E2B] placeholder-gray-400 focus:outline-none focus:border-[#8C5A3C] focus:ring-4 focus:ring-[#e0c4a0]/20 transition-all"
             />
           </div>
 
           {/* craft_type Dropdown */}
           <div>
-            <label htmlFor="craft_type" className="block text-xs font-semibold text-craft-dark uppercase tracking-wider mb-1.5">
+            <label htmlFor="craft_type" className="block text-[11px] font-bold text-[#8C5A3C] uppercase tracking-widest mb-2">
               Type of Craft
             </label>
             <select
@@ -116,7 +116,7 @@ export default function JoinAsArtisan() {
               required
               value={formData.craft_type}
               onChange={handleChange}
-              className="w-full text-sm px-3.5 py-2.5 rounded-lg border border-craft-lightTan bg-white text-craft-dark focus:outline-none focus:border-craft-tan transition-colors"
+              className="w-full text-sm px-4 py-3 rounded-xl border border-[#e8d5c0] bg-white text-[#4B2E2B] focus:outline-none focus:border-[#8C5A3C] focus:ring-4 focus:ring-[#e0c4a0]/20 transition-all"
             >
               <option value="" disabled>Select your craft classification</option>
               <option value="Pottery">Pottery</option>
@@ -130,7 +130,7 @@ export default function JoinAsArtisan() {
 
           {/* village */}
           <div>
-            <label htmlFor="village" className="block text-xs font-semibold text-craft-dark uppercase tracking-wider mb-1.5">
+            <label htmlFor="village" className="block text-[11px] font-bold text-[#8C5A3C] uppercase tracking-widest mb-2">
               Village / Town / Location
             </label>
             <input
@@ -142,13 +142,13 @@ export default function JoinAsArtisan() {
               value={formData.village}
               onChange={handleChange}
               placeholder="e.g., Nizwa, Oman"
-              className="w-full text-sm px-3.5 py-2.5 rounded-lg border border-craft-lightTan bg-white text-craft-dark placeholder-gray-400 focus:outline-none focus:border-craft-tan transition-colors"
+              className="w-full text-sm px-4 py-3 rounded-xl border border-[#e8d5c0] bg-white text-[#4B2E2B] placeholder-gray-400 focus:outline-none focus:border-[#8C5A3C] focus:ring-4 focus:ring-[#e0c4a0]/20 transition-all"
             />
           </div>
 
           {/* years_experience */}
           <div>
-            <label htmlFor="years_experience" className="block text-xs font-semibold text-craft-dark uppercase tracking-wider mb-1.5">
+            <label htmlFor="years_experience" className="block text-[11px] font-bold text-[#8C5A3C] uppercase tracking-widest mb-2">
               Years of Experience
             </label>
             <input
@@ -161,15 +161,15 @@ export default function JoinAsArtisan() {
               value={formData.years_experience}
               onChange={handleChange}
               placeholder="e.g., 12"
-              className="w-full text-sm px-3.5 py-2.5 rounded-lg border border-craft-lightTan bg-white text-craft-dark placeholder-gray-400 focus:outline-none focus:border-craft-tan transition-colors"
+              className="w-full text-sm px-4 py-3 rounded-xl border border-[#e8d5c0] bg-white text-[#4B2E2B] placeholder-gray-400 focus:outline-none focus:border-[#8C5A3C] focus:ring-4 focus:ring-[#e0c4a0]/20 transition-all"
             />
           </div>
 
           {/* Contact Details Grid Block */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-craft-lightTan/40 pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 border-t border-[#e8d5c0]/50 pt-6 mt-6">
             {/* phone */}
             <div>
-              <label htmlFor="phone" className="block text-xs font-semibold text-craft-dark uppercase tracking-wider mb-1.5">
+              <label htmlFor="phone" className="block text-[11px] font-bold text-[#8C5A3C] uppercase tracking-widest mb-2">
                 Contact Number
               </label>
               <input
@@ -180,13 +180,13 @@ export default function JoinAsArtisan() {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="e.g., +94 7X XXX XXXX"
-                className="w-full text-sm px-3.5 py-2.5 rounded-lg border border-craft-lightTan bg-white text-craft-dark placeholder-gray-400 focus:outline-none focus:border-craft-tan transition-colors"
+                className="w-full text-sm px-4 py-3 rounded-xl border border-[#e8d5c0] bg-white text-[#4B2E2B] placeholder-gray-400 focus:outline-none focus:border-[#8C5A3C] focus:ring-4 focus:ring-[#e0c4a0]/20 transition-all"
               />
             </div>
 
             {/* email */}
             <div>
-              <label htmlFor="email" className="block text-xs font-semibold text-craft-dark uppercase tracking-wider mb-1.5">
+              <label htmlFor="email" className="block text-[11px] font-bold text-[#8C5A3C] uppercase tracking-widest mb-2">
                 Email Address
               </label>
               <input
@@ -197,7 +197,7 @@ export default function JoinAsArtisan() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="e.g., name@example.com"
-                className="w-full text-sm px-3.5 py-2.5 rounded-lg border border-craft-lightTan bg-white text-craft-dark placeholder-gray-400 focus:outline-none focus:border-craft-tan transition-colors"
+                className="w-full text-sm px-4 py-3 rounded-xl border border-[#e8d5c0] bg-white text-[#4B2E2B] placeholder-gray-400 focus:outline-none focus:border-[#8C5A3C] focus:ring-4 focus:ring-[#e0c4a0]/20 transition-all"
               />
             </div>
           </div>
@@ -206,11 +206,11 @@ export default function JoinAsArtisan() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#592720] w-full mt-2 bg-craft-tan text-white py-3 rounded-xl text-sm font-semibold hover:bg-opacity-95 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-4 bg-[#8C5A3C] text-white py-3.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             {loading ? (
               <>
-                <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>

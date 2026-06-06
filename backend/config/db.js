@@ -1,14 +1,9 @@
-// config/db.js
-const { Pool } = require("pg");
-require("dotenv").config();
+const { open } = require("sqlite");
+const sqlite3 = require("sqlite3");
 
-const pool = new Pool({
-  host: process.env.DB_HOST ,
-  user: process.env.DB_USER ,
-  password: process.env.DB_PASS ,
-  database: process.env.DB_NAME ,
-  port: process.env.DB_PORT ,
-  ssl: {rejectUnauthorized: false}
+const dbPromise = open({
+  filename: './database.sqlite',
+  driver: sqlite3.Database
 });
 
-module.exports = pool;
+module.exports = dbPromise;

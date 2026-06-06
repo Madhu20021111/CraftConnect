@@ -6,13 +6,18 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        serif: ['"PT Serif"', 'serif'],
+        sans: ['Inter', 'sans-serif'],
+      },
       colors: {
         craft: {
-          cream: '#FFF8F0',
-          tan: '#C08552',
-          brown: '#8C5A3C',
-          dark: '#4B2E2B',
-          lightTan: '#e8d5c0',
+          bg: '#FAFAFA',          // Main background
+          bgAlt: '#FDF2ED',       // Footer/Newsletter background
+          dark: '#3A2318',        // Main heading text
+          brown: '#6B5B53',       // Body text
+          accent: '#8D5A3A',      // Buttons and highlights
+          border: '#E8D8CD',      // Divider lines
         },
       },
     },

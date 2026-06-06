@@ -2,30 +2,63 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-craft-dark px-8 py-8 mt-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
-        <div className="md:col-span-2 text-[#d4b89a] text-sm leading-relaxed">
-          <strong className="text-white text-base block mb-2 font-medium">CraftConnect</strong>
-          Bridging the gap between skilled artisans and people who appreciate authentic handmade goods worldwide.
+    <footer className="bg-craft-bgAlt px-8 py-16 mt-auto">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+        {/* Left Column - Branding */}
+        <div className="md:col-span-4 text-craft-brown text-sm leading-relaxed">
+          <Link href="/" className="font-serif font-bold text-3xl text-craft-accent tracking-tight block mb-4">
+            CraftConnect
+          </Link>
+          <p className="max-w-xs text-[13px] leading-relaxed">
+            Connecting global conscious consumers with the world's most talented master artisans.
+          </p>
         </div>
-        <div>
-          <h4 className="text-white text-sm font-medium mb-3">Explore</h4>
-          <div className="flex flex-col gap-2">
-            <Link href="/products" className="text-[#8a7060] text-sm hover:text-[#d4b89a]">Products</Link>
-            <Link href="/artisans" className="text-[#8a7060] text-sm hover:text-[#d4b89a]">Artisans</Link>
+
+        {/* Middle Columns - Links */}
+        <div className="md:col-span-2">
+          <h4 className="text-craft-accent text-xs font-bold tracking-widest uppercase mb-5">Explore</h4>
+          <div className="flex flex-col gap-3">
+            <Link href="/about" className="text-craft-brown text-[13px] hover:text-craft-accent transition-colors">About</Link>
+            <Link href="/products" className="text-craft-brown text-[13px] hover:text-craft-accent transition-colors">Products</Link>
+            <Link href="/artisans" className="text-craft-brown text-[13px] hover:text-craft-accent transition-colors">Artisans</Link>
           </div>
         </div>
-        <div>
-          <h4 className="text-white text-sm font-medium mb-3">Support</h4>
-          <div className="flex flex-col gap-2">
-            <a className="text-[#8a7060] text-sm hover:text-[#d4b89a] cursor-pointer">Contact us</a>
-            <a className="text-[#8a7060] text-sm hover:text-[#d4b89a] cursor-pointer">FAQ</a>
+        
+        <div className="md:col-span-2">
+          <h4 className="text-craft-accent text-xs font-bold tracking-widest uppercase mb-5">Legal</h4>
+          <div className="flex flex-col gap-3">
+            <Link href="/privacy" className="text-craft-brown text-[13px] hover:text-craft-accent transition-colors">Privacy</Link>
+            <Link href="/shipping" className="text-craft-brown text-[13px] hover:text-craft-accent transition-colors">Shipping</Link>
+            <Link href="/returns" className="text-craft-brown text-[13px] hover:text-craft-accent transition-colors">Returns</Link>
+          </div>
+        </div>
+
+        {/* Right Column - Newsletter */}
+        <div className="md:col-span-4">
+          <h4 className="text-craft-accent text-xs font-bold tracking-widest uppercase mb-5">Newsletter</h4>
+          <p className="text-craft-brown text-[13px] mb-4">
+            Join our community for artisan stories and new arrivals.
+          </p>
+          <div className="flex w-full bg-white rounded-md overflow-hidden border border-craft-border shadow-sm">
+            <input 
+              type="email" 
+              placeholder="Email address" 
+              className="flex-1 px-4 py-3 text-sm focus:outline-none text-craft-dark"
+            />
+            <button className="bg-craft-accent text-white px-5 text-sm font-semibold hover:bg-opacity-90 transition-all">
+              Join
+            </button>
           </div>
         </div>
       </div>
-      <div className="max-w-6xl mx-auto border-t border-white/10 pt-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-        <p className="text-[#6a5a50] text-xs">© 2026 CraftConnect. All rights reserved.</p>
-        <p className="text-[#6a5a50] text-xs">Made with care for artisans everywhere.</p>
+      
+      <div className="max-w-6xl mx-auto border-t border-craft-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="text-craft-brown text-xs">© 2024 CraftConnect. Hand-carved with intention.</p>
+        <div className="flex gap-6">
+          <Link href="/privacy" className="text-craft-brown text-xs hover:text-craft-accent transition-colors">Privacy</Link>
+          <Link href="/shipping" className="text-craft-brown text-xs hover:text-craft-accent transition-colors">Shipping</Link>
+          <Link href="/contact" className="text-craft-brown text-xs hover:text-craft-accent transition-colors">Contact</Link>
+        </div>
       </div>
     </footer>
   );
