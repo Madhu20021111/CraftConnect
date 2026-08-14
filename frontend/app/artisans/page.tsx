@@ -37,6 +37,10 @@ const fadeInUp = {
 export default function ArtisansPage() {
   const [artisans, setArtisans] = useState<Artisan[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  
+  // Custom dropdown state
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedCraft, setSelectedCraft] = useState("All Craft Types");
 
   useEffect(() => {
     api.get("/artisans")
@@ -99,13 +103,45 @@ export default function ArtisansPage() {
             />
           </div>
           <div className="w-px bg-craft-border/50 hidden md:block"></div>
-          <div className="w-full md:w-56 px-2 border-t border-craft-border/50 md:border-t-0 pt-2 md:pt-0 flex items-center">
-            <select className="w-full bg-transparent text-[14px] text-craft-dark py-2 px-2 focus:outline-none cursor-pointer appearance-none text-center">
-              <option>All Craft Types</option>
-              <option>Textiles</option>
-              <option>Ceramics</option>
-              <option>Woodworking</option>
-            </select>
+          <div className="w-full md:w-56 px-2 border-t border-craft-border/50 md:border-t-0 pt-2 md:pt-0 flex items-center relative">
+            <div 
+              className="w-full bg-transparent text-[14px] text-craft-dark py-2 px-2 focus:outline-none cursor-pointer flex items-center justify-between"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <span className="flex-1 text-center">{selectedCraft}</span>
+              <motion.svg 
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-craft-brown shrink-0"
+                animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </motion.svg>
+            </div>
+            
+            {/* Custom Dropdown Menu */}
+            <motion.div
+              initial={{ opacity: 0, y: -10, pointerEvents: "none" }}
+              animate={{ 
+                opacity: isDropdownOpen ? 1 : 0, 
+                y: isDropdownOpen ? 0 : -10, 
+                pointerEvents: isDropdownOpen ? "auto" : "none" 
+              }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-full left-0 w-full mt-2 glass bg-white/80 rounded-xl overflow-hidden shadow-[0_10px_40px_rgba(141,90,58,0.1)] border border-craft-border/50 z-50 flex flex-col"
+            >
+              {["All Craft Types", "Textiles", "Ceramics", "Woodworking"].map(craft => (
+                <div 
+                  key={craft}
+                  className={`px-4 py-3 text-[13px] hover:bg-craft-accent hover:text-white cursor-pointer transition-colors text-center ${selectedCraft === craft ? 'bg-craft-accent/10 text-craft-accent font-bold' : 'text-craft-dark'}`}
+                  onClick={() => {
+                    setSelectedCraft(craft);
+                    setIsDropdownOpen(false);
+                  }}
+                >
+                  {craft}
+                </div>
+              ))}
+            </motion.div>
           </div>
           <button className="bg-craft-accent text-white px-8 py-3 text-[12px] font-bold tracking-widest uppercase hover:bg-craft-dark transition-all duration-300 w-full md:w-auto rounded-lg shadow-sm">
             Filter
@@ -136,7 +172,7 @@ export default function ArtisansPage() {
             variants={staggerContainer}
           >
             {artisans.map((artisan, index) => (
-              <motion.div key={artisan.id} variants={fadeInUp}>
+              <motion.div key={artisan.id} variants={fadeInUp} className="flex flex-col h-full">
                 <ArtisanCard
                   imageUrl={artisan.image_url || ARTISAN_IMAGES[index % ARTISAN_IMAGES.length]}
                   name={artisan.name}

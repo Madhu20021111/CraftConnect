@@ -11,9 +11,10 @@ async function setup() {
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       email TEXT UNIQUE NOT NULL,
+      password TEXT,
       name TEXT,
-      role TEXT DEFAULT 'pending',
-      auth_provider TEXT DEFAULT 'google'
+      role TEXT DEFAULT 'artisan',
+      auth_provider TEXT DEFAULT 'local'
     );
 
     CREATE TABLE IF NOT EXISTS artisans (

@@ -30,7 +30,7 @@ export default function ProductCard({
 
   return (
     <motion.div 
-      className="group cursor-pointer rounded-xl overflow-hidden glass hover:bg-craft-border/30 transition-colors duration-300 border border-transparent hover:border-craft-brown/30"
+      className="group cursor-pointer rounded-xl flex flex-col h-full overflow-hidden glass hover:bg-craft-border/30 transition-colors duration-300 border border-transparent hover:border-craft-brown/30"
       whileHover={{ y: -8 }}
     >
       {/* Image Container */}
@@ -61,7 +61,7 @@ export default function ProductCard({
       </div>
 
       {/* Details */}
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-1">
         <h3 className="font-serif text-[17px] font-bold text-craft-dark mb-2 group-hover:text-craft-accent transition-colors">{name}</h3>
         
         <div className="flex items-center gap-2 mb-3">
@@ -75,7 +75,7 @@ export default function ProductCard({
           <span className="text-[12px] text-craft-brown">{artisanName}</span>
         </div>
 
-        <div className="text-[14px] font-semibold text-craft-dark flex items-center justify-between">
+        <div className="mt-auto text-[14px] font-semibold text-craft-dark flex items-center justify-between">
           <span>{price}</span>
           <span className="opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all duration-300 text-craft-accent text-[12px]">
             View →

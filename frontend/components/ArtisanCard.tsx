@@ -15,7 +15,7 @@ export default function ArtisanCard({ initials, imageUrl, name, craft, location 
 
   return (
     <motion.div 
-      className="group glass bg-white/50 flex flex-col hover:shadow-[0_10px_40px_rgba(141,90,58,0.08)] transition-all duration-500 overflow-hidden rounded-xl border border-craft-border/50 hover:border-craft-brown/30"
+      className="group glass bg-white/50 flex flex-col h-full hover:shadow-[0_10px_40px_rgba(141,90,58,0.08)] transition-all duration-500 overflow-hidden rounded-xl border border-craft-border/50 hover:border-craft-brown/30"
       whileHover={{ y: -8 }}
     >
       {/* Image */}

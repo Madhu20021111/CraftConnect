@@ -17,10 +17,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 const productRoutes = require("./routes/products");
 const artisanRoutes = require("./routes/artisans");
+const authRoutes = require("./routes/auth");
 // const orderRoutes = require("./routes/orders");
 
 app.use("/api/products", productRoutes);
 app.use("/api/artisans", artisanRoutes);
+app.use("/api/auth", authRoutes);
 // app.use("/api/orders", orderRoutes);
 
 const PORT = process.env.PORT || 5000;
