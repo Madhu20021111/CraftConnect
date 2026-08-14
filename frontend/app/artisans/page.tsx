@@ -1,17 +1,18 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import ArtisanCard from "@/components/ArtisanCard";
 import api from "@/services/api";
 
-async function getArtisans() {
-  try {
-    const res = await api.get("/artisans");
-    return res.data;
-  } catch (error) {
-    console.error("Failed to fetch artisans:", error);
-    return [];
-  }
+interface Artisan {
+  id: string | number;
+  name: string;
+  craft_type: string;
+  village: string;
+  image_url?: string;
 }
 
-// Unsplash images for artisans
 const ARTISAN_IMAGES = [
   "https://images.unsplash.com/photo-1544965850-6f91f37e69c1?q=80&w=800&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1589824781471-a47781b0a827?q=80&w=800&auto=format&fit=crop",
@@ -19,23 +20,74 @@ const ARTISAN_IMAGES = [
   "https://images.unsplash.com/photo-1513689404283-c7524ccb50a9?q=80&w=800&auto=format&fit=crop"
 ];
 
-export default async function ArtisansPage() {
-  const artisans = await getArtisans();
+// Animation variants
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
+
+export default function ArtisansPage() {
+  const [artisans, setArtisans] = useState<Artisan[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    api.get("/artisans")
+    .then((res) => {
+      setArtisans(res.data);
+      setLoading(false);
+    })
+    .catch(err => {
+      console.error("Data tracking error:", err);
+      setLoading(false);
+    });
+  }, []);
 
   return (
-    <div className="min-h-screen bg-craft-bg">
-      <div className="px-8 lg:px-24 py-16 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-craft-bg text-craft-dark">
+      
+      {/* Dynamic Header Banner */}
+      <div className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden border-b border-craft-border/50">
+        <motion.div 
+          className="absolute inset-0 z-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?q=80&w=2070&auto=format&fit=crop')" }}
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-craft-bg via-craft-bg/70 to-transparent"></div>
+        </motion.div>
         
-        {/* Header Section */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-craft-dark mb-4">Meet Our Artisans</h1>
-          <p className="text-[15px] text-craft-brown leading-relaxed">
+        <motion.div 
+          className="relative z-10 text-center max-w-2xl px-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <div className="text-[11px] font-bold tracking-[0.25em] text-craft-accent uppercase mb-4">The Makers</div>
+          <h1 className="font-serif text-5xl md:text-6xl font-bold text-craft-dark mb-4 drop-shadow-sm">Meet Our Artisans</h1>
+          <p className="text-[16px] text-craft-brown leading-relaxed max-w-lg mx-auto">
             Discover the hands behind the craft. Every piece tells a story of heritage, patience, and meticulous skill passed down through generations.
           </p>
-        </div>
+        </motion.div>
+      </div>
 
+      <div className="px-8 lg:px-24 py-16 max-w-7xl mx-auto">
+        
         {/* Filter Bar */}
-        <div className="flex flex-col md:flex-row gap-4 bg-white p-3 shadow-sm border border-craft-border mb-16 rounded-md">
+        <motion.div 
+          className="sticky top-4 z-40 glass flex flex-col md:flex-row gap-4 p-3 shadow-md border border-craft-border mb-16 rounded-xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
           <div className="relative flex-1 flex items-center px-4">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-craft-brown/50">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -43,44 +95,58 @@ export default async function ArtisansPage() {
             <input 
               type="text" 
               placeholder="Search by artisan name..." 
-              className="w-full pl-3 pr-4 py-2 text-[13px] text-craft-dark focus:outline-none placeholder-craft-brown/50"
+              className="w-full pl-3 pr-4 py-2 text-[14px] text-craft-dark bg-transparent focus:outline-none placeholder-craft-brown/50"
             />
           </div>
-          <div className="w-px bg-craft-border hidden md:block"></div>
-          <div className="w-full md:w-56 px-2 border-t border-craft-border md:border-t-0 pt-2 md:pt-0">
-            <select className="w-full bg-transparent text-[13px] text-craft-dark py-2 px-2 focus:outline-none cursor-pointer">
+          <div className="w-px bg-craft-border/50 hidden md:block"></div>
+          <div className="w-full md:w-56 px-2 border-t border-craft-border/50 md:border-t-0 pt-2 md:pt-0 flex items-center">
+            <select className="w-full bg-transparent text-[14px] text-craft-dark py-2 px-2 focus:outline-none cursor-pointer appearance-none text-center">
               <option>All Craft Types</option>
               <option>Textiles</option>
               <option>Ceramics</option>
               <option>Woodworking</option>
             </select>
           </div>
-          <button className="bg-craft-accent text-white px-8 py-3 text-[13px] font-bold tracking-wide hover:bg-opacity-90 transition-colors w-full md:w-auto rounded-sm">
+          <button className="bg-craft-accent text-white px-8 py-3 text-[12px] font-bold tracking-widest uppercase hover:bg-craft-dark transition-all duration-300 w-full md:w-auto rounded-lg shadow-sm">
             Filter
           </button>
-        </div>
+        </motion.div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {artisans.map((artisan: any, index: number) => (
-            <ArtisanCard
-              key={artisan.id}
-              imageUrl={artisan.image_url || ARTISAN_IMAGES[index % ARTISAN_IMAGES.length]}
-              name={artisan.name}
-              craft={artisan.craft_type}
-              location={artisan.village}
-            />
-          ))}
-          {artisans.length === 0 && (
-            <div className="col-span-full flex flex-col items-center justify-center py-20 px-6 border border-dashed border-craft-border">
-              <span className="text-4xl mb-4">🏺</span>
-              <h3 className="font-serif text-xl font-bold text-craft-dark mb-2">No artisans found</h3>
-              <p className="text-sm text-craft-brown text-center max-w-sm">
-                We haven't registered any artisans yet.
-              </p>
-            </div>
-          )}
-        </div>
+        {loading ? (
+          <div className="text-center text-sm text-craft-brown py-20 animate-pulse">Summoning master artisans...</div>
+        ) : artisans.length === 0 ? (
+          <motion.div 
+            className="flex flex-col items-center justify-center py-24 px-6 border border-dashed border-craft-border glass rounded-2xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <span className="text-4xl mb-4">🏺</span>
+            <h3 className="font-serif text-2xl font-bold text-craft-dark mb-2">No artisans found</h3>
+            <p className="text-sm text-craft-brown text-center max-w-sm">
+              We haven't registered any artisans matching that criteria yet.
+            </p>
+          </motion.div>
+        ) : (
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+          >
+            {artisans.map((artisan, index) => (
+              <motion.div key={artisan.id} variants={fadeInUp}>
+                <ArtisanCard
+                  imageUrl={artisan.image_url || ARTISAN_IMAGES[index % ARTISAN_IMAGES.length]}
+                  name={artisan.name}
+                  craft={artisan.craft_type}
+                  location={artisan.village}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </div>
   );
