@@ -31,27 +31,73 @@ const fadeInUp = {
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Dropdown state
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState("Featured");
 
   useEffect(() => {
     api.get("/products")
-    .then((res) => {
-      setProducts(res.data);
-      setLoading(false);
-    })
-    .catch(err => {
-      console.error("Failed to fetch products:", err);
-      setLoading(false);
-    });
+      .then((res) => {
+        setProducts(res.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch products:", err);
+        setLoading(false);
+      });
   }, []);
 
   return (
-    <div className="min-h-screen bg-craft-bg pt-12 pb-24">
+    <div className="min-h-screen bg-craft-bg pb-24">
+      {/* Hero Banner */}
+      <div className="relative h-[45vh] min-h-[350px] flex items-center justify-start px-8 lg:px-24 overflow-hidden mb-16 border-b border-craft-border/50">
+        <motion.div
+          className="absolute inset-0 z-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?q=80&w=2070&auto=format&fit=crop')" }}
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-craft-bg/95 via-craft-bg/80 to-transparent"></div>
+        </motion.div>
+
+        <motion.div
+          className="relative z-10 max-w-2xl glass p-8 md:p-12 rounded-3xl shadow-xl border border-craft-border/50"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+        >
+          <motion.div
+            className="text-[11px] font-bold tracking-[0.25em] text-craft-accent uppercase mb-4"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            The Marketplace
+          </motion.div>
+          <motion.h1
+            className="font-serif text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] text-craft-dark mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            Curated Collections
+          </motion.h1>
+          <motion.p
+            className="text-craft-brown text-[15px] leading-relaxed max-w-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            Discover unique, handcrafted creations directly from master artisans.
+            Every piece is selected for its authenticity and uncompromising quality.
+          </motion.p>
+        </motion.div>
+      </div>
+
       <div className="px-8 lg:px-24 max-w-7xl mx-auto flex flex-col md:flex-row gap-16 relative">
-        
+
         {/* Sticky Glass Sidebar */}
         <aside className="w-full md:w-64 shrink-0 md:sticky top-8 h-fit glass p-6 rounded-2xl border border-craft-border/50 shadow-sm z-30 hidden md:block">
           {/* Categories */}
@@ -113,7 +159,7 @@ export default function ProductsPage() {
             </ul>
           </div>
         </aside>
-        
+
         {/* Mobile Sidebar Toggle (Placeholder) */}
         <div className="md:hidden w-full glass rounded-xl p-4 flex justify-center text-[12px] font-bold text-craft-dark border border-craft-border uppercase tracking-widest cursor-pointer shadow-sm">
           Show Filters
@@ -121,21 +167,21 @@ export default function ProductsPage() {
 
         {/* Main Content */}
         <div className="flex-1">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-6">
-            <div>
-              <div className="text-[10px] font-bold tracking-[0.15em] text-craft-accent uppercase mb-3">Curated Collection</div>
-              <h1 className="font-serif text-4xl font-bold text-craft-dark drop-shadow-sm">Handcrafted Textiles</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-6">
+            <div className="flex items-center gap-4">
+              <span className="font-serif text-2xl font-bold text-craft-dark">Explore Artworks</span>
+              <span className="text-[12px] font-semibold text-craft-brown/60 hidden sm:block">204 Items</span>
             </div>
-            
+
             {/* Custom Sort Dropdown */}
             <div className="relative text-[12px] font-bold text-craft-dark flex items-center gap-2">
               <span className="text-craft-brown/70">Sort by:</span>
-              <div 
+              <div
                 className="flex items-center gap-1 cursor-pointer bg-white px-3 py-1.5 rounded-full border border-craft-border hover:border-craft-accent/50 transition-colors shadow-sm"
                 onClick={() => setIsSortOpen(!isSortOpen)}
               >
                 <span className="font-semibold">{selectedSort}</span>
-                <motion.svg 
+                <motion.svg
                   xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3 text-craft-accent"
                   animate={{ rotate: isSortOpen ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
@@ -146,16 +192,16 @@ export default function ProductsPage() {
 
               <motion.div
                 initial={{ opacity: 0, y: -10, pointerEvents: "none" }}
-                animate={{ 
-                  opacity: isSortOpen ? 1 : 0, 
-                  y: isSortOpen ? 0 : -10, 
-                  pointerEvents: isSortOpen ? "auto" : "none" 
+                animate={{
+                  opacity: isSortOpen ? 1 : 0,
+                  y: isSortOpen ? 0 : -10,
+                  pointerEvents: isSortOpen ? "auto" : "none"
                 }}
                 transition={{ duration: 0.2 }}
                 className="absolute top-full right-0 mt-2 w-40 glass bg-white/90 rounded-xl overflow-hidden shadow-lg border border-craft-border/50 z-50 flex flex-col"
               >
                 {["Featured", "Price: Low to High", "Price: High to Low", "Newest"].map(option => (
-                  <div 
+                  <div
                     key={option}
                     className={`px-4 py-2.5 text-[12px] hover:bg-craft-accent hover:text-white cursor-pointer transition-colors ${selectedSort === option ? 'bg-craft-accent/10 text-craft-accent font-bold' : 'text-craft-dark'}`}
                     onClick={() => {
@@ -176,7 +222,7 @@ export default function ProductsPage() {
               Curating your collection...
             </div>
           ) : (
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10"
               initial="hidden"
               whileInView="show"
@@ -185,7 +231,7 @@ export default function ProductsPage() {
             >
               {products.map((p, i) => (
                 <motion.div key={p.id} variants={fadeInUp} className="flex flex-col h-full">
-                  <ProductCard 
+                  <ProductCard
                     imageUrl={PRODUCT_IMAGES[i % PRODUCT_IMAGES.length]}
                     name={p.name}
                     price={p.price}
@@ -220,7 +266,7 @@ export default function ProductsPage() {
             </button>
           </div>
         </div>
-        
+
       </div>
     </div>
   );

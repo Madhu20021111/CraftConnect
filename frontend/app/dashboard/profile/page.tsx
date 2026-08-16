@@ -32,35 +32,35 @@ export default function ArtisanProfilePage() {
     fetch("http://localhost:5000/api/artisans/my-profile", {
       headers: { "Authorization": `Bearer ${token}` }
     })
-    .then(res => {
-      if (!res.ok) throw new Error("Failed to fetch profile");
-      return res.json();
-    })
-    .then(data => {
-      setArtisanId(data.id);
-      setFormData({
-        name: data.name || "",
-        email: data.email || "",
-        contact_number: data.contact_number || "",
-        village: data.village || "",
-        craft_type: data.craft_type || "Ceramics",
-        years_experience: data.years_experience || "",
-        image_url: data.image_url || ""
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch profile");
+        return res.json();
+      })
+      .then(data => {
+        setArtisanId(data.id);
+        setFormData({
+          name: data.name || "",
+          email: data.email || "",
+          contact_number: data.contact_number || "",
+          village: data.village || "",
+          craft_type: data.craft_type || "Ceramics",
+          years_experience: data.years_experience || "",
+          image_url: data.image_url || ""
+        });
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        router.push("/auth/signin");
       });
-      setLoading(false);
-    })
-    .catch(err => {
-      console.error(err);
-      router.push("/auth/signin");
-    });
   }, [router]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0 || !artisanId) return;
-    
+
     const file = e.target.files[0];
     const token = localStorage.getItem("craftconnect_token");
-    
+
     const formData = new FormData();
     formData.append("profileImage", file);
 
@@ -92,7 +92,7 @@ export default function ArtisanProfilePage() {
     try {
       const res = await fetch(`http://localhost:5000/api/artisans/${artisanId}`, {
         method: "PUT",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
@@ -116,136 +116,172 @@ export default function ArtisanProfilePage() {
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      className="max-w-4xl mx-auto"
     >
-      <div className="mb-8">
-        <h1 className="font-serif text-3xl font-bold text-craft-dark mb-2">My Profile</h1>
-        <p className="text-[13px] text-craft-brown">Update your artisan details and contact information so buyers can connect with you.</p>
+      {/* Decorative Header */}
+      <div className="relative h-48 rounded-t-3xl overflow-hidden mb-8 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?q=80&w=2070&auto=format&fit=crop" alt="Workspace" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-craft-bg/95 to-transparent"></div>
+        <div className="absolute bottom-6 left-8">
+          <h1 className="font-serif text-4xl font-bold text-craft-dark drop-shadow-md">Artisan Profile</h1>
+          <p className="text-[14px] text-craft-dark font-medium mt-1">Manage your craft identity and storefront details.</p>
+        </div>
       </div>
 
-      <div className="glass-panel p-8 rounded-2xl border border-craft-border/50">
-        <form onSubmit={handleSave} className="flex flex-col gap-6">
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-craft-dark uppercase tracking-widest ml-1">Full Name</label>
-              <input 
-                type="text" 
-                value={formData.name}
-                onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full bg-white/50 border border-craft-border/50 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold"
-              />
+      <div className="glass p-8 md:p-12 rounded-b-3xl rounded-t-xl sm:rounded-t-3xl sm:-mt-16 mx-4 sm:mx-0 relative z-10 border border-craft-border/50 shadow-xl bg-white/40">
+        <form onSubmit={handleSave} className="flex flex-col gap-10">
+
+          {/* Profile Picture Section */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8 pb-8 border-b border-craft-border/50">
+            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg bg-craft-bgAlt shrink-0 group">
+              {formData.image_url ? (
+                <img src={formData.image_url} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-craft-brown">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                </div>
+              )}
+              {/* Overlay for hover */}
+              <label className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8 text-white"><path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" /></svg>
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+              </label>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-craft-dark uppercase tracking-widest ml-1">Email Address</label>
-              <input 
-                type="email" 
-                value={formData.email}
-                disabled
-                className="w-full bg-white/50 border border-craft-border/50 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold opacity-60 cursor-not-allowed"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-craft-dark uppercase tracking-widest ml-1">Phone / Contact Number</label>
-              <input 
-                type="tel" 
-                placeholder="+1 234 567 890"
-                value={formData.contact_number}
-                onChange={e => setFormData({...formData, contact_number: e.target.value})}
-                className="w-full bg-white/50 border border-craft-border/50 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-craft-dark uppercase tracking-widest ml-1">Village / Location</label>
-              <input 
-                type="text" 
-                placeholder="e.g., Portland, Oregon"
-                value={formData.village}
-                onChange={e => setFormData({...formData, village: e.target.value})}
-                className="w-full bg-white/50 border border-craft-border/50 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-craft-dark uppercase tracking-widest ml-1">Craft Type</label>
-              <select 
-                value={formData.craft_type}
-                onChange={e => setFormData({...formData, craft_type: e.target.value})}
-                className="w-full bg-white/50 border border-craft-border/50 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold appearance-none"
-              >
-                <option value="Ceramics">Ceramics</option>
-                <option value="Textiles">Textiles</option>
-                <option value="Woodworking">Woodworking</option>
-                <option value="Jewelry">Jewelry</option>
-                <option value="Glass">Glassblowing</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-craft-dark uppercase tracking-widest ml-1">Years of Experience</label>
-              <input 
-                type="number" 
-                min="0"
-                placeholder="e.g., 5"
-                value={formData.years_experience}
-                onChange={e => setFormData({...formData, years_experience: e.target.value})}
-                className="w-full bg-white/50 border border-craft-border/50 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-craft-dark uppercase tracking-widest ml-1">Profile Image</label>
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-craft-bgAlt border border-craft-border flex items-center justify-center text-craft-brown shadow-inner overflow-hidden shrink-0">
-                {formData.image_url ? (
-                  <img src={formData.image_url} alt="Profile" className="w-full h-full object-cover" />
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                  </svg>
+            <div className="flex-1 text-center sm:text-left mt-2 sm:mt-0">
+              <h3 className="font-serif text-xl font-bold text-craft-dark mb-2">Profile Photo</h3>
+              <p className="text-[13px] text-craft-brown mb-5 max-w-sm mx-auto sm:mx-0 leading-relaxed">
+                This image will be displayed on your product pages and public profile. A high-quality photo of yourself or your workspace is recommended.
+              </p>
+              <div className="flex items-center justify-center sm:justify-start gap-4">
+                <label className="text-[11px] font-bold text-craft-accent uppercase tracking-widest cursor-pointer hover:text-craft-dark transition-colors px-4 py-2 border border-craft-accent/30 rounded-full hover:bg-craft-accent/5">
+                  {uploadingImage ? "Uploading..." : "Upload Photo"}
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+                </label>
+                {formData.image_url && (
+                  <button type="button" onClick={() => setFormData(prev => ({ ...prev, image_url: "" }))} className="text-[11px] font-bold text-red-500 hover:text-red-600 uppercase tracking-widest transition-colors">
+                    Remove
+                  </button>
                 )}
               </div>
-              <div className="flex-1">
-                <div className="flex gap-2">
-                  <label className="flex-1 flex items-center justify-center gap-2 bg-white/50 border border-craft-border/50 border-dashed text-craft-dark px-4 py-4 rounded-xl cursor-pointer hover:bg-white transition-all text-[13px] font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-craft-accent">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                    </svg>
-                    {uploadingImage ? "Uploading..." : "Click to upload photo"}
-                    <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
-                  </label>
-                  {formData.image_url && (
-                    <button 
-                      type="button" 
-                      onClick={() => setFormData(prev => ({ ...prev, image_url: "" }))}
-                      className="px-4 py-4 bg-red-50 text-red-500 rounded-xl hover:bg-red-100 transition-colors text-[13px] font-bold border border-red-100 flex items-center gap-1"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-                <p className="text-[10px] text-craft-brown ml-1 mt-1.5">Max size 5MB. JPG, PNG, WEBP.</p>
+            </div>
+          </div>
+
+          {/* Form Grid sections */}
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="w-full md:w-1/3">
+              <h3 className="font-serif text-[17px] font-bold text-craft-dark mb-2">Personal Details</h3>
+              <p className="text-[13px] text-craft-brown max-w-[200px]">Basic contact information for platform communication and buyer inquiries.</p>
+            </div>
+            <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-craft-dark uppercase tracking-widest ml-1 opacity-70">Full Name</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full bg-white/70 border border-craft-border/60 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold hover:border-craft-brown/40"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-craft-dark uppercase tracking-widest ml-1 opacity-70">Email Address</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  disabled
+                  className="w-full bg-craft-bgAlt/50 border border-craft-border/30 text-craft-dark px-4 py-3 rounded-xl focus:outline-none text-[13px] font-semibold opacity-60 cursor-not-allowed"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <label className="text-[10px] font-bold text-craft-dark uppercase tracking-widest ml-1 opacity-70">Contact Number</label>
+                <input
+                  type="tel"
+                  placeholder="+1 234 567 890"
+                  value={formData.contact_number}
+                  onChange={e => setFormData({ ...formData, contact_number: e.target.value })}
+                  className="w-full bg-white/70 border border-craft-border/60 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold hover:border-craft-brown/40"
+                />
               </div>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-craft-border/50 flex justify-end">
-            <button 
+          <div className="h-px w-full bg-craft-border/40"></div>
+
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="w-full md:w-1/3">
+              <h3 className="font-serif text-[17px] font-bold text-craft-dark mb-2">Craft Identity</h3>
+              <p className="text-[13px] text-craft-brown max-w-[200px]">What distinguishes and categorizes your handcrafted goods.</p>
+            </div>
+
+            <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+              <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <label className="text-[10px] font-bold text-craft-dark uppercase tracking-widest ml-1 opacity-70">Village / Location</label>
+                <input
+                  type="text"
+                  placeholder="e.g., Portland, Oregon"
+                  value={formData.village}
+                  onChange={e => setFormData({ ...formData, village: e.target.value })}
+                  className="w-full bg-white/70 border border-craft-border/60 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold hover:border-craft-brown/40"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-craft-dark uppercase tracking-widest ml-1 opacity-70">Primary Craft Type</label>
+                <div className="relative">
+                  <select
+                    value={formData.craft_type}
+                    onChange={e => setFormData({ ...formData, craft_type: e.target.value })}
+                    className="w-full bg-white/70 border border-craft-border/60 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold appearance-none hover:border-craft-brown/40"
+                  >
+                    <option value="Ceramics">Ceramics</option>
+                    <option value="Textiles">Textiles</option>
+                    <option value="Woodworking">Woodworking</option>
+                    <option value="Jewelry">Jewelry</option>
+                    <option value="Glass">Glassblowing</option>
+                  </select>
+                  <div className="absolute top-1/2 right-4 -translate-y-1/2 pointer-events-none text-craft-brown">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-craft-dark uppercase tracking-widest ml-1 opacity-70">Years of Experience</label>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="e.g., 5"
+                  value={formData.years_experience}
+                  onChange={e => setFormData({ ...formData, years_experience: e.target.value })}
+                  className="w-full bg-white/70 border border-craft-border/60 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold hover:border-craft-brown/40"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t border-craft-border/50 flex justify-end gap-3 mt-2">
+            <button
+              type="button"
+              onClick={() => router.push('/dashboard')}
+              className="px-6 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-craft-dark hover:bg-craft-border/30 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
               type="submit"
               disabled={isSaving || uploadingImage}
-              className={`bg-craft-accent text-white px-8 py-3 rounded-xl text-[12px] font-bold uppercase tracking-widest shadow-md hover:bg-craft-dark transition-all ${isSaving || uploadingImage ? 'opacity-70 cursor-not-allowed' : ''}`}
+              className={`bg-craft-accent text-white px-8 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-md shadow-craft-accent/30 hover:shadow-lg hover:shadow-craft-accent/40 hover:-translate-y-0.5 transition-all ${isSaving || uploadingImage ? 'opacity-70 cursor-not-allowed transform-none' : ''}`}
             >
-              {isSaving ? "Saving..." : "Save Changes"}
+              {isSaving ? "Saving..." : "Save Profile"}
             </button>
           </div>
-          
+
         </form>
       </div>
     </motion.div>
