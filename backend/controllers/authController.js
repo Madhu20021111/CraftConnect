@@ -33,15 +33,16 @@ const register = async (req, res) => {
 
     const userId = result.lastID;
 
-    // Optional: create a blank artisan profile for them
-    await db.run(
+    // Create a blank artisan profile for them
+    const artisanResult = await db.run(
       "INSERT INTO artisans (user_id, name, email) VALUES (?, ?, ?)",
       [userId, name, email]
     );
+    const artisanId = artisanResult.lastID;
 
     // Generate token
     const token = jwt.sign(
-      { userId: userId, email: email, role: 'artisan' },
+      { userId: userId, artisanId: artisanId, email: email, role: 'artisan' },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -49,7 +50,7 @@ const register = async (req, res) => {
     res.status(201).json({
       message: 'User registered successfully',
       token,
-      user: { id: userId, name, email, role: 'artisan' }
+      user: { id: userId, artisanId: artisanId, name, email, role: 'artisan' }
     });
 
   } catch (err) {
@@ -85,9 +86,13 @@ const login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    // Fetch artisan ID
+    const artisan = await db.get("SELECT id FROM artisans WHERE user_id = ?", [user.id]);
+    const artisanId = artisan ? artisan.id : null;
+
     // Generate token
     const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role },
+      { userId: user.id, artisanId: artisanId, email: user.email, role: user.role },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -95,7 +100,7 @@ const login = async (req, res) => {
     res.json({
       message: 'Login successful',
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role }
+      user: { id: user.id, artisanId: artisanId, name: user.name, email: user.email, role: user.role }
     });
 
   } catch (err) {

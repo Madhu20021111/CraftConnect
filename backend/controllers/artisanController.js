@@ -26,6 +26,25 @@ const getArtisans = async (req, res) => {
   }
 };
 
+// Get my profile using JWT
+const getMyProfile = async (req, res) => {
+  try {
+    const db = await dbPromise;
+    const artisanId = req.user.artisanId;
+    if (!artisanId) {
+      return res.status(404).json({ error: "No artisan profile found for this user." });
+    }
+    const row = await db.get("SELECT * FROM artisans WHERE id = ?", [artisanId]);
+    if (row) {
+      res.json(row);
+    } else {
+      res.status(404).json({ error: "Artisan not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // Get single artisan by ID
 const getArtisanById = async (req, res) => {
   const { id } = req.params;
@@ -87,6 +106,7 @@ const uploadProfileImage = async (req, res) => {
 module.exports = { 
   getArtisans, 
   getArtisanById, 
+  getMyProfile,
   addArtisan, 
   updateArtisan, 
   upload, 

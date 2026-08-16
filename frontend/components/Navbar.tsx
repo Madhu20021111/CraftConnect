@@ -10,20 +10,23 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-craft-bg border-b border-craft-border py-5 px-8 flex justify-between items-center sticky top-0 z-50">
-      {/* Left Links */}
-      <div className="flex gap-8 items-center w-1/3">
+      {/* Left Logo */}
+      <div className="flex items-center w-1/3">
+        <Link href="/" className="flex items-center gap-3">
+          <img src="/cc logo.png" alt="CraftConnect Logo" className="absolute h-29 w-auto object-contain" />
+          <span className="font-serif text-2xl ml-25 font-bold tracking-tight text-craft-dark">
+            CraftConnect
+          </span>
+        </Link>
+      </div>
+
+      {/* Center Links */}
+      <div className="w-1/3 flex justify-center gap-8 items-center text-center">
         <Link href="/products" className="text-craft-dark text-[13px] font-bold tracking-widest uppercase hover:text-craft-accent transition-colors">
           Shop
         </Link>
         <Link href="/artisans" className="text-craft-dark text-[13px] font-bold tracking-widest uppercase hover:text-craft-accent transition-colors">
           Artisans
-        </Link>
-      </div>
-
-      {/* Center Logo */}
-      <div className="w-1/3 text-center">
-        <Link href="/" className="font-serif text-2xl font-bold tracking-tight text-craft-dark">
-          CraftConnect
         </Link>
       </div>
 
