@@ -31,7 +31,7 @@ export default function Hero() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          Est. 2024
+          Est. 2026
         </motion.div>
         
         <motion.h1 
