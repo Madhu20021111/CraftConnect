@@ -239,11 +239,17 @@ export default function ArtisanProfilePage() {
                     onChange={e => setFormData({ ...formData, craft_type: e.target.value })}
                     className="w-full bg-white/70 border border-craft-border/60 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold appearance-none hover:border-craft-brown/40"
                   >
+                    <option value="" disabled>Select your craft classification</option>
+                    <option value="Bamboo Work">Bamboo Work</option>
+                    <option value="Block Printing">Block Printing</option>
+                    <option value="Candle Making">Candle Making</option>
                     <option value="Ceramics">Ceramics</option>
-                    <option value="Textiles">Textiles</option>
-                    <option value="Woodworking">Woodworking</option>
-                    <option value="Jewelry">Jewelry</option>
                     <option value="Glass">Glassblowing</option>
+                    <option value="Jewelry">Jewelry</option>
+                    <option value="Pottery">Pottery</option>
+                    <option value="Textiles">Textiles</option>
+                    <option value="Weaving">Weaving</option>
+                    <option value="Woodwork">Woodwork</option>
                   </select>
                   <div className="absolute top-1/2 right-4 -translate-y-1/2 pointer-events-none text-craft-brown">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>

@@ -78,15 +78,31 @@ const addArtisan = async (req, res) => {
 
 // Update artisan
 const updateArtisan = async (req, res) => {
-  const { id } = req.params;
+  let { id } = req.params;
+  if (id === "my-profile") {
+    id = req.user?.artisanId;
+    if (!id) return res.status(404).json({ error: "No artisan profile linked to this user." });
+  }
+
   const { name, village, craft_type, years_experience, contact_number, email, image_url } = req.body;
+
   try {
     const db = await dbPromise;
+    // Fetch existing data so we don't accidentally overwrite with nulls
+    const existing = await db.get("SELECT * FROM artisans WHERE id = ?", [id]);
+    if (!existing) return res.status(404).json({ error: "Artisan not found" });
+
+    const finalImage = image_url !== undefined ? image_url : existing.image_url;
+    const finalVillage = village !== undefined ? village : existing.village;
+    const finalCraftType = craft_type !== undefined ? craft_type : existing.craft_type;
+    const finalYears = years_experience !== undefined ? years_experience : existing.years_experience;
+    const finalContact = contact_number !== undefined ? contact_number : existing.contact_number;
+
     await db.run(
       "UPDATE artisans SET name=?, village=?, craft_type=?, years_experience=?, contact_number=?, email=?, image_url=? WHERE id=?",
-      [name, village, craft_type, years_experience, contact_number, email, image_url, id]
+      [name || existing.name, finalVillage, finalCraftType, finalYears, finalContact, email || existing.email, finalImage, id]
     );
-    res.json({ success: true });
+    res.json({ success: true, id });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -97,18 +113,18 @@ const uploadProfileImage = async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
-  
+
   // Create a URL for the uploaded file
   const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
   res.json({ imageUrl });
 };
 
-module.exports = { 
-  getArtisans, 
-  getArtisanById, 
+module.exports = {
+  getArtisans,
+  getArtisanById,
   getMyProfile,
-  addArtisan, 
-  updateArtisan, 
-  upload, 
-  uploadProfileImage 
+  addArtisan,
+  updateArtisan,
+  upload,
+  uploadProfileImage
 };

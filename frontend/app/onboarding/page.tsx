@@ -2,27 +2,34 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function OnboardingPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [hasToken, setHasToken] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (typeof window !== "undefined") {
+      setHasToken(!!localStorage.getItem("craftconnect_token"));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (hasToken === false && status === "unauthenticated") {
       router.push("/auth/signin");
     }
-  }, [status, router]);
+  }, [status, hasToken, router]);
 
-  if (status === "loading") {
+  if (status === "loading" || hasToken === null) {
     return <div className="min-h-screen bg-craft-bg flex items-center justify-center">Loading...</div>;
   }
 
   return (
     <div className="min-h-screen bg-craft-bg flex flex-col items-center justify-center py-12 px-6">
       <div className="text-center mb-12">
-        <h1 className="font-serif text-4xl font-bold text-craft-dark mb-4">Welcome, {session?.user?.name}!</h1>
+        <h1 className="font-serif text-4xl font-bold text-craft-dark mb-4">Welcome, {session?.user?.name || "Craft Lover"}!</h1>
         <p className="text-craft-brown text-[15px]">To get started, tell us how you'll be using CraftConnect.</p>
       </div>
 

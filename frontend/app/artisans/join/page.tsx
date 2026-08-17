@@ -33,19 +33,19 @@ export default function JoinAsArtisan() {
     setError("");
 
     try {
-      // Maps all parameters directly to match your backend transaction payload
-      const response = await api.post("/artisans", {
+      // Update the empty profile allocated during registration
+      const response = await api.put("/artisans/my-profile", {
         name: formData.name,
         craft_type: formData.craft_type,
         village: formData.village,
         years_experience: parseInt(formData.years_experience, 10),
-        phone: formData.phone,
+        contact_number: formData.phone, // changed from 'phone' to 'contact_number'
         email: formData.email,
       });
 
       setSuccess(true);
       setTimeout(() => {
-        router.push(`/artisans/${response.data.id}/dashboard`);
+        router.push(`/dashboard/profile`);
       }, 2000);
     } catch (err: any) {
       console.error("Registration failed:", err);
@@ -63,7 +63,7 @@ export default function JoinAsArtisan() {
         </div>
         <h1 className="text-2xl font-bold text-craft-dark mb-2">Registration Complete!</h1>
         <p className="text-sm text-craft-brown max-w-sm">
-          Your profile has been saved successfully with your contact details. Redirecting to the artisan directory...
+          Your profile has been saved successfully with your contact details. Redirecting to your dashboard...
         </p>
       </div>
     );
@@ -119,12 +119,16 @@ export default function JoinAsArtisan() {
               className="w-full text-sm px-4 py-3 rounded-xl border border-[#e8d5c0] bg-white text-[#4B2E2B] focus:outline-none focus:border-[#8C5A3C] focus:ring-4 focus:ring-[#e0c4a0]/20 transition-all"
             >
               <option value="" disabled>Select your craft classification</option>
-              <option value="Pottery">Pottery</option>
-              <option value="Weaving">Weaving</option>
-              <option value="Woodwork">Woodwork</option>
+              <option value="Bamboo Work">Bamboo Work</option>
               <option value="Block Printing">Block Printing</option>
               <option value="Candle Making">Candle Making</option>
-              <option value="Bamboo Work">Bamboo Work</option>
+              <option value="Ceramics">Ceramics</option>
+              <option value="Glass">Glassblowing</option>
+              <option value="Jewelry">Jewelry</option>
+              <option value="Pottery">Pottery</option>
+              <option value="Textiles">Textiles</option>
+              <option value="Weaving">Weaving</option>
+              <option value="Woodwork">Woodwork</option>
             </select>
           </div>
 

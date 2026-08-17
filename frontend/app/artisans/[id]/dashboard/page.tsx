@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import api from "@/services/api";
 
-export default function ArtisanDashboard({ params }: { params: { id: string } }) {
+export default function ArtisanDashboard({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -33,9 +34,9 @@ export default function ArtisanDashboard({ params }: { params: { id: string } })
       router.push("/auth/signin");
       return;
     }
-    
+
     // Fetch artisan data
-    api.get(`/artisans/${params.id}`)
+    api.get(`/artisans/${id}`)
       .then((res) => {
         setFormData({
           name: res.data.name || "",
@@ -56,7 +57,7 @@ export default function ArtisanDashboard({ params }: { params: { id: string } })
         setErrorMsg("Failed to load your profile data.");
         setLoading(false);
       });
-  }, [params.id, status, router]);
+  }, [id, status, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
@@ -86,19 +87,19 @@ export default function ArtisanDashboard({ params }: { params: { id: string } })
       if (selectedFile) {
         const uploadData = new FormData();
         uploadData.append("profileImage", selectedFile);
-        
+
         // Ensure you configure axios properly for multipart/form-data
-        const uploadRes = await api.post(`/artisans/${params.id}/upload`, uploadData, {
+        const uploadRes = await api.post(`/artisans/${id}/upload`, uploadData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
-        
+
         finalImageUrl = uploadRes.data.imageUrl;
       }
 
       // 2. Update artisan profile
-      await api.put(`/artisans/${params.id}`, {
+      await api.put(`/artisans/${id}`, {
         ...formData,
         image_url: finalImageUrl
       });
@@ -136,7 +137,7 @@ export default function ArtisanDashboard({ params }: { params: { id: string } })
           )}
 
           <form onSubmit={handleSubmit} className="space-y-8">
-            
+
             {/* Profile Image Section */}
             <div className="flex flex-col md:flex-row gap-8 items-start border-b border-craft-border pb-8">
               <div className="shrink-0">
@@ -147,14 +148,14 @@ export default function ArtisanDashboard({ params }: { params: { id: string } })
                     <div className="w-full h-full flex items-center justify-center text-4xl">🏺</div>
                   )}
                 </div>
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  ref={fileInputRef} 
-                  onChange={handleFileChange} 
-                  className="hidden" 
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
                 />
-                <button 
+                <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   className="w-full text-center text-[11px] font-bold uppercase tracking-widest text-craft-accent hover:text-craft-dark transition-colors"
@@ -162,7 +163,7 @@ export default function ArtisanDashboard({ params }: { params: { id: string } })
                   Change Photo
                 </button>
               </div>
-              
+
               <div className="flex-1 pt-2">
                 <h3 className="font-serif text-lg font-bold text-craft-dark mb-1">Studio Portrait</h3>
                 <p className="text-[13px] text-craft-brown mb-4">
