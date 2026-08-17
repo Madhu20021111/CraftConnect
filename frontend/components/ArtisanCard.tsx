@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface ArtisanCardProps {
+  id?: string | number;
   initials?: string;
   imageUrl?: string;
   name: string;
@@ -10,7 +12,7 @@ interface ArtisanCardProps {
   location: string;
 }
 
-export default function ArtisanCard({ initials, imageUrl, name, craft, location }: ArtisanCardProps) {
+export default function ArtisanCard({ id, initials, imageUrl, name, craft, location }: ArtisanCardProps) {
   const displayImage = imageUrl || "https://images.unsplash.com/photo-1544965850-6f91f37e69c1?q=80&w=800&auto=format&fit=crop";
 
   return (
@@ -48,9 +50,15 @@ export default function ArtisanCard({ initials, imageUrl, name, craft, location 
         </div>
 
         {/* Contact Button */}
-        <button className="mt-auto w-full py-3 border border-craft-border text-craft-dark text-[11px] font-bold tracking-widest uppercase rounded-full hover:bg-craft-accent hover:border-craft-accent hover:text-white hover:shadow-[0_0_15px_rgba(217,119,87,0.3)] transition-all duration-300">
-          View Profile
-        </button>
+        {id ? (
+          <Link href={`/artisans/${id}`} className="mt-auto w-full py-3 border border-craft-border text-craft-dark text-[11px] font-bold tracking-widest uppercase rounded-full hover:bg-craft-accent hover:border-craft-accent hover:text-white hover:shadow-[0_0_15px_rgba(217,119,87,0.3)] transition-all duration-300 text-center block">
+            View Profile
+          </Link>
+        ) : (
+          <button className="mt-auto w-full py-3 border border-craft-border text-craft-dark text-[11px] font-bold tracking-widest uppercase rounded-full hover:bg-craft-accent hover:border-craft-accent hover:text-white hover:shadow-[0_0_15px_rgba(217,119,87,0.3)] transition-all duration-300">
+            View Profile
+          </button>
+        )}
       </div>
     </motion.div>
   );

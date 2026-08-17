@@ -174,6 +174,7 @@ export default function ArtisansPage() {
             {artisans.map((artisan, index) => (
               <motion.div key={artisan.id} variants={fadeInUp} className="flex flex-col h-full">
                 <ArtisanCard
+                  id={artisan.id}
                   imageUrl={artisan.image_url || ARTISAN_IMAGES[index % ARTISAN_IMAGES.length]}
                   name={artisan.name}
                   craft={artisan.craft_type}

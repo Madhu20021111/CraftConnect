@@ -94,11 +94,12 @@ export default function HomePage() {
             {products.slice(0, 4).map((p, index) => (
               <motion.div key={p.id} variants={fadeInUp}>
                 <ProductCard 
+                  id={p.id}
                   imageUrl={PRODUCT_IMAGES[index % PRODUCT_IMAGES.length]}
                   badge={index === 0 ? 'New Arrival' : index === 3 ? 'Limited' : undefined}
                   name={p.name}
                   price={p.price}
-                  artisanName={p.artisanName}
+                  artisanName={(p as any).artisan_name || p.artisanName || 'Unknown Artisan'}
                 />
               </motion.div>
             ))}

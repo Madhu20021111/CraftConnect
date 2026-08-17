@@ -1,14 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import api from "@/services/api";
-export default function NewArtworkPage() {
+
+export default function EditArtworkPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
   
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   
@@ -21,6 +25,37 @@ export default function NewArtworkPage() {
     color: "",
     size: ""
   });
+
+  useEffect(() => {
+    if (!id) return;
+    
+    const fetchArtwork = async () => {
+      try {
+        const res = await api.get(`/products/${id}`);
+        const prod = res.data;
+        setFormData({
+          name: prod.name || "",
+          description: prod.description || "",
+          category: prod.category || "Textiles",
+          price: prod.price || "",
+          material: prod.material || "",
+          color: prod.color || "",
+          size: prod.size || ""
+        });
+        if (prod.image_url) {
+          setImagePreview(`http://localhost:5000/uploads${prod.image_url}`);
+        }
+      } catch (err) {
+        console.error("Failed to fetch product", err);
+        alert("Artwork not found or you are not authorized to edit it.");
+        router.push("/dashboard/artworks");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchArtwork();
+  }, [id, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -53,13 +88,7 @@ export default function NewArtworkPage() {
       data.append("color", formData.color);
       data.append("size", formData.size);
       
-      // Backend authMiddleware reads email from token, we no longer need to append it from frontend
-      // But we can append a dummy if the backend expects it strictly, though our new backend code checks for req.user.email
-      // Actually, wait, `addProduct` reads `email` from `req.body.email` in `productController.js`.
-      // I should update `addProduct` to read from `req.user.email` too if it's there!
-      // For now, let's not append email, I'll update `addProduct` to use `req.user`.
-
-      await api.post("/products", data, {
+      await api.put(`/products/${id}`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         }
@@ -67,12 +96,16 @@ export default function NewArtworkPage() {
       
       router.push("/dashboard/artworks");
     } catch (error) {
-      console.error("Error publishing artwork:", error);
-      alert("Failed to publish artwork. Please try again.");
+      console.error("Error updating artwork:", error);
+      alert("Failed to update artwork. Please try again.");
     } finally {
       setIsPublishing(false);
     }
   };
+
+  if (isLoading) {
+    return <div className="text-center mt-20 text-craft-brown animate-pulse">Loading artwork details...</div>;
+  }
 
   return (
     <motion.div 
@@ -89,8 +122,8 @@ export default function NewArtworkPage() {
           </button>
         </Link>
         <div>
-          <h1 className="font-serif text-3xl font-bold text-craft-dark mb-1">Publish New Artwork</h1>
-          <p className="text-[13px] text-craft-brown">Add a new handcrafted piece to your shop.</p>
+          <h1 className="font-serif text-3xl font-bold text-craft-dark mb-1">Edit Artwork</h1>
+          <p className="text-[13px] text-craft-brown">Update the details of your handcrafted piece.</p>
         </div>
       </div>
 
@@ -110,12 +143,12 @@ export default function NewArtworkPage() {
                     </svg>
                   </div>
                   <div className="text-center">
-                    <span className="text-craft-dark font-bold">Click to upload</span> or drag and drop
-                    <p className="text-[10px] font-normal mt-1">High resolution PNG, JPG up to 10MB</p>
+                    <span className="text-craft-dark font-bold">Click to upload new image</span> or drag and drop
+                    <p className="text-[10px] font-normal mt-1">Leave empty to keep current image</p>
                   </div>
                 </>
               )}
-              <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} required />
+              <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
             </label>
           </div>
 
@@ -227,7 +260,7 @@ export default function NewArtworkPage() {
               disabled={isPublishing}
               className={`bg-craft-accent text-white px-8 py-3 rounded-xl text-[12px] font-bold uppercase tracking-widest shadow-md hover:bg-craft-dark transition-all ${isPublishing ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              {isPublishing ? "Publishing..." : "Publish Artwork"}
+              {isPublishing ? "Saving..." : "Save Changes"}
             </button>
           </div>
           

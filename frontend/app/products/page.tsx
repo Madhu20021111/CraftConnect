@@ -131,8 +131,8 @@ export default function ProductsPage() {
               <div className="absolute left-1/3 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-md border-2 border-craft-accent cursor-pointer hover:scale-110 transition-transform"></div>
             </div>
             <div className="flex justify-between text-[11px] font-bold text-craft-brown">
-              <span>$20</span>
-              <span>$500+</span>
+              <span>Rs. 20</span>
+              <span>Rs. 500+</span>
             </div>
           </div>
 
@@ -232,6 +232,7 @@ export default function ProductsPage() {
               {products.map((p, i) => (
                 <motion.div key={p.id} variants={fadeInUp} className="flex flex-col h-full">
                   <ProductCard
+                    id={p.id}
                     imageUrl={p.image_url ? `http://localhost:5000/uploads${p.image_url}` : PRODUCT_IMAGES[i % PRODUCT_IMAGES.length]}
                     name={p.name}
                     price={p.price}

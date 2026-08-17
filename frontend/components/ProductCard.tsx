@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface ProductCardProps {
+  id?: string | number;
   emoji?: string;
   imageUrl?: string;
   badge?: string;
@@ -16,6 +18,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({
+  id,
   emoji,
   imageUrl,
   badge,
@@ -28,7 +31,7 @@ export default function ProductCard({
 }: ProductCardProps) {
   const displayImage = imageUrl || `https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop`;
 
-  return (
+  const cardContent = (
     <motion.div 
       className="group cursor-pointer rounded-xl flex flex-col h-full overflow-hidden glass hover:bg-craft-border/30 transition-colors duration-300 border border-transparent hover:border-craft-brown/30"
       whileHover={{ y: -8 }}
@@ -76,7 +79,7 @@ export default function ProductCard({
         </div>
 
         <div className="mt-auto text-[14px] font-semibold text-craft-dark flex items-center justify-between">
-          <span>{price}</span>
+          <span>Rs. {Number(price).toFixed(2)}</span>
           <span className="opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all duration-300 text-craft-accent text-[12px]">
             View →
           </span>
@@ -84,4 +87,10 @@ export default function ProductCard({
       </div>
     </motion.div>
   );
+
+  return id ? (
+    <Link href={`/products/${id}`} className="block h-full">
+      {cardContent}
+    </Link>
+  ) : cardContent;
 }
