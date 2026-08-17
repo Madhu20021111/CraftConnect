@@ -2,26 +2,44 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import ProductCard from "@/components/ProductCard";
+import api from "@/services/api";
+
+const PRODUCT_IMAGES = [
+  "https://images.unsplash.com/photo-1580226343513-3b1029cba5ac?q=80&w=800&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1584347714499-13e51f4728f3?q=80&w=800&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1516054817452-fbc216d29944?q=80&w=800&auto=format&fit=crop"
+];
 
 export default function ArtisanArtworksPage() {
-  // Mock data for the artisan's artworks
-  const myArtworks = [
-    {
-      id: 1,
-      name: "Handwoven Cotton Throw",
-      price: "$120.00",
-      artisanName: "Jane Doe",
-      imageUrl: "https://images.unsplash.com/photo-1580226343513-3b1029cba5ac?q=80&w=800&auto=format&fit=crop"
-    },
-    {
-      id: 2,
-      name: "Ceramic Serving Bowl",
-      price: "$85.00",
-      artisanName: "Jane Doe",
-      imageUrl: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop"
-    }
-  ];
+  const { data: session } = useSession();
+  const [myArtworks, setMyArtworks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      const email = session?.user?.email;
+      if (!email) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await api.get(`/products/artisan/${email}`);
+        setMyArtworks(res.data);
+      } catch (error) {
+        console.error("Failed to fetch artworks:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // If session is still loading, NextAuth will eventually update it.
+    // However, if we're not using auth strongly yet, we can just fetch.
+    fetchArtworks();
+  }, [session]);
 
   return (
     <motion.div 
@@ -44,7 +62,11 @@ export default function ArtisanArtworksPage() {
         </Link>
       </div>
 
-      {myArtworks.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center py-20 text-[13px] text-craft-brown font-semibold animate-pulse">
+          Loading your artworks...
+        </div>
+      ) : myArtworks.length === 0 ? (
         <div className="glass-panel p-16 rounded-2xl border border-craft-border/50 text-center flex flex-col items-center">
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-craft-accent mb-4 shadow-sm border border-craft-border/50">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
@@ -55,14 +77,14 @@ export default function ArtisanArtworksPage() {
           <p className="text-[13px] text-craft-brown max-w-sm mb-6">You haven't listed any of your creations. Publish your first artwork to start selling.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {myArtworks.map((art) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {myArtworks.map((art, i) => (
             <div key={art.id} className="flex flex-col h-full relative group">
               <ProductCard 
-                imageUrl={art.imageUrl}
+                imageUrl={art.image_url ? `http://localhost:5000/uploads${art.image_url}` : PRODUCT_IMAGES[i % PRODUCT_IMAGES.length]}
                 name={art.name}
                 price={art.price}
-                artisanName={art.artisanName}
+                artisanName={art.artisan_name || 'You'}
               />
               <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                 <button className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full text-craft-dark flex items-center justify-center hover:text-craft-accent shadow-sm border border-craft-border">

@@ -232,10 +232,10 @@ export default function ProductsPage() {
               {products.map((p, i) => (
                 <motion.div key={p.id} variants={fadeInUp} className="flex flex-col h-full">
                   <ProductCard
-                    imageUrl={PRODUCT_IMAGES[i % PRODUCT_IMAGES.length]}
+                    imageUrl={p.image_url ? `http://localhost:5000/uploads${p.image_url}` : PRODUCT_IMAGES[i % PRODUCT_IMAGES.length]}
                     name={p.name}
                     price={p.price}
-                    artisanName={p.artisanName}
+                    artisanName={p.artisan_name || p.artisanName || 'Unknown'}
                   />
                 </motion.div>
               ))}
