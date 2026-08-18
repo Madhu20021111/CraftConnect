@@ -86,7 +86,12 @@ const getProductById = async (req, res) => {
   try {
     const db = await dbPromise;
     const product = await db.get(`
-      SELECT p.*, a.name AS artisan_name, a.email 
+      SELECT p.*, 
+             a.name AS artisan_name, 
+             a.email, 
+             a.village, 
+             a.craft_type, 
+             a.image_url AS artisan_image
       FROM products p
       JOIN artisans a ON p.artisan_id = a.id
       WHERE p.id = ?

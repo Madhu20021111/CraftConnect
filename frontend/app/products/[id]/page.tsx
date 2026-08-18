@@ -125,9 +125,15 @@ export default function ProductDetailPage() {
         <div className="bg-[#FAF7F2] rounded-md p-10 md:p-16 mb-32 relative overflow-hidden flex flex-col md:flex-row items-center gap-12 border border-[#EBE5DE] shadow-sm">
           <div className="md:w-1/2 relative z-10">
             <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 rounded-lg bg-craft-brown text-craft-bg flex items-center justify-center font-serif text-xl shadow-inner border border-craft-border">
-                {(product.artisan_name || 'A').charAt(0)}
-              </div>
+              {product.artisan_image ? (
+                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-craft-border shadow-sm shrink-0">
+                  <img src={product.artisan_image} alt={product.artisan_name} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <div className="w-12 h-12 rounded-lg bg-craft-brown text-craft-bg flex items-center justify-center font-serif text-xl shadow-inner border border-craft-border shrink-0">
+                  {(product.artisan_name || 'A').charAt(0)}
+                </div>
+              )}
               <div>
                 <div className="font-serif font-bold text-[17px] text-craft-dark">Meet {product.artisan_name}</div>
                 <div className="text-[10px] tracking-widest uppercase text-craft-brown font-semibold mt-1">
@@ -142,20 +148,21 @@ export default function ProductDetailPage() {
             </p>
             
             <div className="flex gap-6">
-              <a href={`mailto:${product.email}`} className="text-[11px] font-bold tracking-widest uppercase text-craft-accent hover:text-craft-dark flex items-center gap-2 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                </svg>
-                Contact {product.artisan_name?.split(' ')[0]}
-              </a>
+              <Link 
+                href={`/artisans/${product.artisan_id}`}
+                className="text-[11px] font-bold tracking-widest uppercase text-craft-accent hover:text-craft-dark flex items-center gap-2 transition-colors"
+              >
+                <span>View Full Profile & Contact</span>
+                <span>→</span>
+              </Link>
             </div>
           </div>
           
-          <div className="md:w-1/2 relative md:absolute md:-right-10 md:top-10 md:-bottom-10 z-0 rotate-2 shadow-2xl overflow-hidden aspect-square md:aspect-auto border-4 border-white/50">
+          <div className="md:w-1/2 relative md:absolute md:-right-10 md:top-10 md:-bottom-10 z-0 rotate-2 shadow-2xl overflow-hidden aspect-square md:aspect-auto border-4 border-white/50 rounded-xl">
             <img 
-              src="https://images.unsplash.com/photo-1513689404283-c7524ccb50a9?q=80&w=1000&auto=format&fit=crop" 
+              src={product.artisan_image || "/artisan-weaving.png"} 
               className="w-full h-full object-cover"
-              alt="Artisan Studio"
+              alt={`${product.artisan_name} Workshop`}
             />
           </div>
         </div>
