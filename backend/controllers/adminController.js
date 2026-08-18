@@ -43,6 +43,12 @@ const deleteUser = async (req, res) => {
     const db = await dbPromise;
     
     if (type === 'user') {
+      // Prevent deleting the primary admin account
+      const targetUser = await db.get("SELECT email FROM users WHERE id = ?", [id]);
+      if (targetUser && targetUser.email && targetUser.email.toLowerCase() === 'niroshamadumali37@gmail.com') {
+        return res.status(400).json({ error: "Cannot delete the primary administrator account." });
+      }
+
       // 1. Get the artisan_id for this user (if they have one)
       const artisan = await db.get("SELECT id FROM artisans WHERE user_id = ?", [id]);
       

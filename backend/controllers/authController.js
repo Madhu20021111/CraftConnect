@@ -2,8 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dbPromise = require('../config/db');
 
-// In a real app, this should be an environment variable
-const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_craftconnect_key_123';
+const JWT_SECRET = process.env.JWT_SECRET || 'craftconnect_secure_jwt_token_secret_key_2026_production';
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;

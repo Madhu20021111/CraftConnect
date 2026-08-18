@@ -80,14 +80,26 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-xl mb-8 font-medium">
-            {error}
+        {error ? (
+          <div className="glass bg-white/80 border border-red-200/80 p-10 rounded-2xl text-center max-w-xl mx-auto my-12 shadow-sm">
+            <div className="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+              🔒
+            </div>
+            <h2 className="font-serif text-2xl font-bold text-craft-dark mb-2">Access Denied</h2>
+            <p className="text-craft-brown text-sm leading-relaxed mb-6">
+              The Admin Control Panel is strictly restricted to authorized administrators.
+              Please sign in with your designated admin credentials to continue.
+            </p>
+            <button
+              onClick={() => router.push("/auth/signin")}
+              className="bg-craft-accent text-white px-8 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest hover:bg-craft-dark transition-all shadow-md"
+            >
+              Sign In as Admin
+            </button>
           </div>
-        )}
-
-        {/* Users Table */}
-        <div className="glass bg-white/50 rounded-2xl border border-craft-border/50 overflow-hidden shadow-sm">
+        ) : (
+          /* Users Table */
+          <div className="glass bg-white/50 rounded-2xl border border-craft-border/50 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -138,12 +150,18 @@ export default function AdminDashboardPage() {
                         </span>
                       </td>
                       <td className="py-4 px-6 text-right">
-                        <button
-                          onClick={() => handleDeleteProfile(profile)}
-                          className="bg-transparent border border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600 hover:border-red-300 px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all"
-                        >
-                          Delete
-                        </button>
+                        {profile.email?.toLowerCase() === "niroshamadumali37@gmail.com" ? (
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-craft-brown/60 px-3 py-1.5 bg-craft-bg rounded-lg border border-craft-border/60">
+                            Primary Admin
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => handleDeleteProfile(profile)}
+                            className="bg-transparent border border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600 hover:border-red-300 px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all"
+                          >
+                            Delete
+                          </button>
+                        )}
                       </td>
                     </motion.tr>
                   ))
@@ -152,6 +170,7 @@ export default function AdminDashboardPage() {
             </table>
           </div>
         </div>
+        )}
 
       </div>
     </div>

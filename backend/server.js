@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const multer = require("multer");
 require("dotenv").config();
 
 const app = express();   // ✅ create app first
@@ -25,7 +26,18 @@ app.use("/api/products", productRoutes);
 app.use("/api/artisans", artisanRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
-// app.use("/api/orders", orderRoutes);
+// Global Error Handler (handles Multer errors, payload size issues, etc.)
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: "File too large. Maximum allowed size is 5MB." });
+    }
+    return res.status(400).json({ error: `Upload error: ${err.message}` });
+  } else if (err) {
+    return res.status(400).json({ error: err.message || "An unexpected error occurred." });
+  }
+  next();
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

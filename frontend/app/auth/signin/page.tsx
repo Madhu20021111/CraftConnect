@@ -45,9 +45,11 @@ export default function AuthPage() {
       localStorage.setItem("craftconnect_token", data.token);
       localStorage.setItem("craftconnect_user_email", formData.email);
 
-      // Redirect based on signup vs login
+      // Redirect based on role / signup vs login
       if (isSignUp) {
         router.push("/onboarding");
+      } else if (data.user?.role === "admin" || formData.email.toLowerCase() === "niroshamadumali37@gmail.com") {
+        router.push("/admin/dashboard");
       } else {
         router.push("/dashboard");
       }
