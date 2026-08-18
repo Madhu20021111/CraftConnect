@@ -36,11 +36,18 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-// Get all artisans
+// Get all public artisans (excluding admin accounts)
 const getArtisans = async (req, res) => {
   try {
     const db = await dbPromise;
-    const rows = await db.all("SELECT * FROM artisans");
+    const rows = await db.all(`
+      SELECT a.* 
+      FROM artisans a
+      LEFT JOIN users u ON a.user_id = u.id
+      WHERE (u.role IS NULL OR u.role != 'admin')
+        AND (a.email IS NULL OR LOWER(a.email) != 'niroshamadumali37@gmail.com')
+      ORDER BY a.id DESC
+    `);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });

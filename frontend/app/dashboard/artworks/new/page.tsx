@@ -154,16 +154,26 @@ export default function NewArtworkPage() {
                 onChange={handleChange}
                 className="w-full bg-white/50 border border-craft-border/50 text-craft-dark px-4 py-3 rounded-xl focus:outline-none focus:border-craft-accent focus:bg-white transition-all shadow-sm text-[13px] font-semibold appearance-none"
               >
-                <option value="Textiles">Textiles</option>
+                <option value="Pottery">Pottery</option>
                 <option value="Ceramics">Ceramics</option>
+                <option value="Weaving">Weaving</option>
+                <option value="Textiles">Textiles</option>
                 <option value="Woodwork">Woodwork</option>
+                <option value="Candle Making">Candle Making</option>
+                <option value="Block Printing">Block Printing</option>
                 <option value="Jewelry">Jewelry</option>
-                <option value="Glass">Glass</option>
+                <option value="Leather Craft">Leather Craft</option>
+                <option value="Basketry">Basketry</option>
+                <option value="Glass">Glassblowing</option>
+                <option value="Metalwork">Metalwork</option>
+                <option value="Stone Carving">Stone Carving</option>
+                <option value="Bamboo Work">Bamboo Work</option>
+                <option value="Sculpture">Sculpture & Fine Art</option>
               </select>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-craft-dark uppercase tracking-widest ml-1">Price (USD)</label>
+              <label className="text-[11px] font-bold text-craft-dark uppercase tracking-widest ml-1">Price (Rs.)</label>
               <input 
                 type="number" 
                 step="0.01"

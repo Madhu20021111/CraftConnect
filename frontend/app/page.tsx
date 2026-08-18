@@ -121,7 +121,7 @@ export default function HomePage() {
           >
             <motion.div variants={fadeInUp} className="relative h-[650px] rounded-2xl overflow-hidden glass shadow-2xl">
               <motion.img 
-                src="https://images.unsplash.com/photo-1544965850-6f91f37e69c1?q=80&w=1000&auto=format&fit=crop" 
+                src="/artisan-weaving.png" 
                 alt="Artisan weaving"
                 className="w-full h-full object-cover"
                 whileHover={{ scale: 1.03 }}

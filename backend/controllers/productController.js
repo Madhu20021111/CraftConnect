@@ -7,11 +7,12 @@ const getProducts = async (req, res) => {
     const db = await dbPromise;
     const rows = await db.all(`
       SELECT p.id, p.name, p.description, p.price, p.image_url,
+             p.category, p.material, p.color, p.size,
              a.name AS artisan_name, a.village, a.craft_type,
              a.contact_number, a.email
       FROM products p
       JOIN artisans a ON p.artisan_id = a.id
-      ORDER BY p.id;
+      ORDER BY p.id DESC;
     `);
     res.json(rows);
   } catch (err) {

@@ -86,9 +86,23 @@ export default function Navbar() {
                   </p>
                 </div>
                 <div className="p-2">
-                  <Link href="/dashboard" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-2.5 text-[13px] font-bold text-craft-dark hover:bg-craft-bgAlt hover:text-craft-accent rounded-xl transition-colors">
-                    Dashboard
-                  </Link>
+                  {(localUser?.email?.toLowerCase() === "niroshamadumali37@gmail.com" || session?.user?.email?.toLowerCase() === "niroshamadumali37@gmail.com") ? (
+                    <Link 
+                      href="/admin/dashboard" 
+                      onClick={() => setIsDropdownOpen(false)} 
+                      className="block px-4 py-2.5 text-[13px] font-bold text-craft-accent bg-craft-accent/10 hover:bg-craft-accent hover:text-white rounded-xl transition-colors"
+                    >
+                      Admin Dashboard
+                    </Link>
+                  ) : (
+                    <Link 
+                      href="/dashboard" 
+                      onClick={() => setIsDropdownOpen(false)} 
+                      className="block px-4 py-2.5 text-[13px] font-bold text-craft-dark hover:bg-craft-bgAlt hover:text-craft-accent rounded-xl transition-colors"
+                    >
+                      Artisan Dashboard
+                    </Link>
+                  )}
                   <button
                     onClick={handleSignOut}
                     className="w-full text-left px-4 py-2.5 text-[13px] font-bold text-red-500 hover:bg-red-50 rounded-xl transition-colors mt-1"
