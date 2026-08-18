@@ -440,7 +440,7 @@ export default function ProductsPage() {
                 <motion.div key={p.id} variants={fadeInUp} className="flex flex-col h-full">
                   <ProductCard
                     id={p.id}
-                    imageUrl={p.image_url ? `http://localhost:5000/uploads${p.image_url}` : PRODUCT_IMAGES[i % PRODUCT_IMAGES.length]}
+                    imageUrl={p.image_url ? (p.image_url.startsWith('http') ? p.image_url : `http://localhost:5000/uploads${p.image_url.startsWith('/') ? '' : '/'}${p.image_url}`) : PRODUCT_IMAGES[i % PRODUCT_IMAGES.length]}
                     name={p.name}
                     price={p.price}
                     artisanName={p.artisan_name || p.artisanName || 'Master Artisan'}

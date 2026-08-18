@@ -9,12 +9,14 @@ import ProductCard from "@/components/ProductCard";
 
 interface Product {
   id: string | number;
+  image_url?: string;
   emoji?: string;
   badge?: string;
   name: string;
   price: string;
-  artisanInitials: string;
-  artisanName: string;
+  artisanInitials?: string;
+  artisanName?: string;
+  artisan_name?: string;
 }
 
 const PRODUCT_IMAGES = [
@@ -91,18 +93,24 @@ export default function HomePage() {
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
           >
-            {products.slice(0, 4).map((p, index) => (
-              <motion.div key={p.id} variants={fadeInUp}>
-                <ProductCard 
-                  id={p.id}
-                  imageUrl={PRODUCT_IMAGES[index % PRODUCT_IMAGES.length]}
-                  badge={index === 0 ? 'New Arrival' : index === 3 ? 'Limited' : undefined}
-                  name={p.name}
-                  price={p.price}
-                  artisanName={(p as any).artisan_name || p.artisanName || 'Unknown Artisan'}
-                />
-              </motion.div>
-            ))}
+            {products.slice(0, 4).map((p, index) => {
+              const formattedImage = p.image_url
+                ? (p.image_url.startsWith('http') ? p.image_url : `http://localhost:5000/uploads${p.image_url.startsWith('/') ? '' : '/'}${p.image_url}`)
+                : PRODUCT_IMAGES[index % PRODUCT_IMAGES.length];
+
+              return (
+                <motion.div key={p.id} variants={fadeInUp}>
+                  <ProductCard 
+                    id={p.id}
+                    imageUrl={formattedImage}
+                    badge={index === 0 ? 'New Arrival' : index === 3 ? 'Limited' : undefined}
+                    name={p.name}
+                    price={p.price}
+                    artisanName={(p as any).artisan_name || p.artisanName || 'Master Artisan'}
+                  />
+                </motion.div>
+              );
+            })}
           </motion.div>
         )}
       </section>

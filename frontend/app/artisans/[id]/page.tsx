@@ -197,7 +197,7 @@ export default function ArtisanProfilePage() {
               <ProductCard 
                 key={p.id}
                 id={p.id}
-                imageUrl={p.image_url ? `http://localhost:5000/uploads${p.image_url}` : undefined}
+                imageUrl={p.image_url ? (p.image_url.startsWith('http') ? p.image_url : `http://localhost:5000/uploads${p.image_url.startsWith('/') ? '' : '/'}${p.image_url}`) : undefined}
                 name={p.name}
                 price={p.price}
                 artisanName={artisan.name}
