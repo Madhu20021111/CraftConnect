@@ -5,6 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+import api from "@/services/api";
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -14,20 +16,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     image_url: null
   });
 
-  const fetchProfile = () => {
+  const fetchProfile = async () => {
     const token = localStorage.getItem("craftconnect_token");
     if (token) {
-      fetch("http://localhost:5000/api/artisans/my-profile", {
-        headers: { "Authorization": `Bearer ${token}` }
-      })
-      .then(res => {
-        if (res.ok) return res.json();
-        throw new Error("Not ok");
-      })
-      .then(data => {
-        setUserData({ name: data.name || "Artisan", image_url: data.image_url || null });
-      })
-      .catch(err => console.error(err));
+      try {
+        const res = await api.get("/artisans/my-profile");
+        setUserData({ name: res.data.name || "Artisan", image_url: res.data.image_url || null });
+      } catch (err) {
+        console.error("Failed to load profile:", err);
+      }
     }
   };
 
